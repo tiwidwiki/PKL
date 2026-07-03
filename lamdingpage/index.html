@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>MoodDrink | Minuman Segar, Mood Bahagia</title>
+    <meta
+      name="description"
+      content="MoodDrink adalah toko online minuman segar dengan desain warna ceria, menu variatif, dan pemesanan praktis."
+    />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <header class="topbar">
+      <a class="brand" href="#home">
+        <span class="brand-mark" aria-label="MoodDrink logo">
+          <span class="brand-mark-cup"></span>
+        </span>
+        <span>MoodDrink</span>
+      </a>
+      <button class="menu-toggle" aria-label="Buka menu">☰</button>
+      <nav class="nav-links">
+        <a href="#home">Home</a>
+        <a href="#menu">Menu</a>
+        <a href="#checkout">Checkout</a>
+        <a href="#akun">Akun</a>
+        <a href="#keunggulan">Keunggulan</a>
+        <a href="admin.html">Admin</a>
+      </nav>
+      <button class="cart-pill" id="cart-trigger" type="button">Keranjang <span id="cart-count">0</span></button>
+    </header>
+
+    <main id="home">
+      <section class="hero">
+        <div class="hero-copy">
+          <p class="eyebrow">Segarkan moodmu dengan setiap sip</p>
+          <h1>MoodDrink</h1>
+          <p class="hero-text">
+            Pilih rasa, klik, nikmati. Toko online minuman segar dengan katalog cepat, checkout dua langkah, loyalty, dan dashboard penjual sederhana.
+          </p>
+          <div class="hero-actions">
+            <a class="btn btn-primary" href="#menu">Lihat Menu</a>
+            <a class="btn btn-secondary" href="#keunggulan">Kenapa MoodDrink?</a>
+          </div>
+          <ul class="hero-highlights">
+            <li>✔ Gratis topping pilihan</li>
+            <li>✔ Pengiriman cepat</li>
+            <li>✔ Promo rutin setiap minggu</li>
+          </ul>
+        </div>
+        <div class="hero-card">
+          <img class="hero-product-image" src="https://images.unsplash.com/photo-1622597467836-f3285f2131b8?auto=format&fit=crop&w=700&q=80" alt="Mango smoothie segar" />
+          <div class="drink-bubble bubble-large"></div>
+          <div class="drink-bubble bubble-small"></div>
+          <div class="hero-card-inner">
+            <p class="eyebrow">Best Seller Hari Ini</p>
+            <h3>Mango Chill Smoothie</h3>
+            <p>Rasa mangga segar + yogurt lembut</p>
+            <strong>Rp 28.000</strong>
+          </div>
+        </div>
+      </section>
+
+      <section class="stats">
+        <div><strong>4.9/5</strong><span>Rating pelanggan</span></div>
+        <div><strong>1.200+</strong><span>Pesanan bulanan</span></div>
+        <div><strong>15 menit</strong><span>Estimasi siap antar</span></div>
+      </section>
+
+      <section class="section categories-section">
+        <div class="section-heading">
+          <p class="eyebrow">Kategori unggulan</p>
+          <h2>Temukan minuman yang sesuai mood dan kebutuhanmu</h2>
+        </div>
+        <div class="category-grid">
+          <article class="category-card">
+            <div class="category-icon">🍹</div>
+            <h3>Juice Fresh</h3>
+            <p>Minuman buah segar yang menyegarkan.</p>
+          </article>
+          <article class="category-card">
+            <div class="category-icon">🧋</div>
+            <h3>Smoothie Creamy</h3>
+            <p>Tekstur lembut dan creamy untuk mood santai.</p>
+          </article>
+          <article class="category-card">
+            <div class="category-icon">☕</div>
+            <h3>Coffee Mood</h3>
+            <p>Perpaduan kopi nikmat dan aroma hangat.</p>
+          </article>
+          <article class="category-card">
+            <div class="category-icon">🫖</div>
+            <h3>Tea Spark</h3>
+            <p>Minuman herbal dan teh segar dengan energi baru.</p>
+          </article>
+          <article class="category-card">
+            <div class="category-icon">🥤</div>
+            <h3>Ice Blend</h3>
+            <p>Minuman blender dingin untuk mood manis.</p>
+          </article>
+          <article class="category-card">
+            <div class="category-icon">🥪</div>
+            <h3>Snack</h3>
+            <p>Camilan ringan pendamping minuman favorit.</p>
+          </article>
+        </div>
+      </section>
+
+      <section id="menu" class="section">
+        <div class="section-heading">
+          <p class="eyebrow">Menu favorit</p>
+          <h2>Pilih minuman yang cocok dengan moodmu hari ini</h2>
+        </div>
+        <div class="catalog-toolbar" aria-label="Filter katalog">
+          <label>
+            Jenis
+            <select id="catalog-category">
+              <option value="">Semua</option>
+              <option value="juice">Juice</option>
+              <option value="smoothie">Smoothie</option>
+              <option value="coffee">Coffee</option>
+              <option value="tea">Tea</option>
+              <option value="ice-blend">Ice Blend</option>
+              <option value="snack">Snack</option>
+            </select>
+          </label>
+          <label>
+            Mood
+            <select id="catalog-mood">
+              <option value="">Semua mood</option>
+              <option value="fresh">Fresh</option>
+              <option value="focus">Focus</option>
+              <option value="relax">Relax</option>
+              <option value="happy">Happy</option>
+            </select>
+          </label>
+          <label>
+            Harga
+            <select id="catalog-price">
+              <option value="">Semua harga</option>
+              <option value="under-20000">Di bawah Rp 20.000</option>
+              <option value="20000-30000">Rp 20.000 - Rp 30.000</option>
+              <option value="above-30000">Di atas Rp 30.000</option>
+            </select>
+          </label>
+          <label>
+            Sortir
+            <select id="catalog-sort">
+              <option value="popular">Popularitas</option>
+              <option value="new">Terbaru</option>
+              <option value="price-low">Harga termurah</option>
+              <option value="price-high">Harga tertinggi</option>
+              <option value="rating">Rating</option>
+            </select>
+          </label>
+        </div>
+        <div class="product-grid" id="product-grid">
+          <!-- product cards will be rendered here dynamically -->
+        </div>
+      </section>
+
+      <section id="keunggulan" class="section features-section">
+        <div class="section-heading">
+          <p class="eyebrow">Kenapa MoodDrink?</p>
+          <h2>Desain segar, layanan cepat, dan pengalaman belanja yang fun.</h2>
+        </div>
+        <div class="feature-grid">
+          <article class="feature-card">
+            <h3>Visual konsisten</h3>
+            <p>Warna hijau mint, kuning lemon, dan oranye coral membuat aplikasi terasa segar dari awal.</p>
+          </article>
+          <article class="feature-card">
+            <h3>Pesan dengan mudah</h3>
+            <p>Alur checkout singkat dan sederhana untuk mengurangi pembatalan saat belanja.</p>
+          </article>
+          <article class="feature-card">
+            <h3>Promo personal</h3>
+            <p>Dapatkan penawaran khusus sesuai preferensi dan kebiasaan belanja Anda.</p>
+          </article>
+        </div>
+      </section>
+
+      <section id="order" class="promo-banner">
+        <div>
+          <p class="eyebrow">Promo minggu ini</p>
+          <h2>Beli 2 paket, gratis topping favoritmu!</h2>
+        </div>
+        <a class="btn btn-primary" href="#home">Pesan Sekarang</a>
+      </section>
+
+      <section id="checkout" class="section checkout-section">
+        <div class="section-heading">
+          <p class="eyebrow">Keranjang & checkout</p>
+          <h2>Review pesanan, pilih pengiriman, lalu bayar.</h2>
+        </div>
+        <div class="checkout-layout">
+          <div class="cart-panel">
+            <div class="panel-title-row">
+              <h3>Keranjang</h3>
+              <button class="btn btn-secondary" id="clear-cart-btn" type="button">Kosongkan</button>
+            </div>
+            <div id="cart-list" class="cart-list"></div>
+          </div>
+          <div class="checkout-card">
+            <h3>Ringkasan biaya</h3>
+            <div class="price-lines">
+              <span>Subtotal</span><strong id="cart-subtotal">Rp 0</strong>
+              <span>Diskon</span><strong id="cart-discount">Rp 0</strong>
+              <span>Ongkir</span><strong id="cart-delivery">Rp 0</strong>
+              <span>Total</span><strong id="cart-grand-total">Rp 0</strong>
+            </div>
+            <button class="btn btn-primary" id="checkout-trigger" type="button">Lanjut Checkout</button>
+            <p class="mini-note" id="notification-message">Notifikasi status pesanan akan muncul setelah checkout.</p>
+          </div>
+        </div>
+      </section>
+
+      <section id="akun" class="section account-section">
+        <div class="section-heading">
+          <p class="eyebrow">Akun pengguna</p>
+          <h2>Profil, preferensi rasa, wishlist, dan riwayat pesanan.</h2>
+        </div>
+        <div class="account-layout">
+          <form id="profile-form" class="profile-card">
+            <label>Nama
+              <input type="text" name="profileName" placeholder="Nama kamu" />
+            </label>
+            <label>Nomor kontak
+              <input type="tel" name="profilePhone" placeholder="08xxxxxxxxxx" />
+            </label>
+            <label>Alamat tersimpan
+              <input type="text" name="profileAddress" placeholder="Alamat utama" />
+            </label>
+            <label>Preferensi rasa
+              <select name="profileTaste">
+                <option value="fresh">Fresh dan ringan</option>
+                <option value="creamy">Creamy</option>
+                <option value="coffee">Kopi kuat</option>
+                <option value="less-sugar">Less sugar</option>
+              </select>
+            </label>
+            <button class="btn btn-primary" type="submit">Simpan Profil</button>
+            <p class="order-message" id="profile-message"></p>
+          </form>
+          <div class="history-card">
+            <div class="panel-title-row">
+              <h3>Riwayat pesanan</h3>
+              <span class="loyalty-badge" id="loyalty-badge">Silver</span>
+            </div>
+            <p class="mini-note" id="points-summary">0 poin reward</p>
+            <div id="history-list" class="history-list"></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section order-section">
+        <div class="section-heading">
+          <p class="eyebrow">Pesan cepat</p>
+          <h2>Bikin pesanan favoritmu dalam hitungan menit</h2>
+        </div>
+        <div class="order-layout">
+          <div class="order-panel">
+            <div class="select-group">
+              <label for="category-select">Kategori</label>
+              <select id="category-select">
+                <option value="">Semua kategori</option>
+                <option value="juice">Juice Fresh</option>
+                <option value="smoothie">Smoothie Creamy</option>
+                <option value="coffee">Coffee Mood</option>
+                <option value="tea">Tea Spark</option>
+                <option value="ice-blend">Ice Blend</option>
+                <option value="snack">Snack</option>
+              </select>
+            </div>
+            <div class="select-group">
+              <label for="drink-select">Pilih minuman</label>
+              <select id="drink-select">
+                <option value="">-- Pilih minuman --</option>
+              </select>
+            </div>
+            <div class="select-group">
+              <label for="size-select">Ukuran</label>
+              <select id="size-select">
+                <option value="regular">Reguler</option>
+                <option value="large">Large (+Rp 4.000)</option>
+              </select>
+            </div>
+            <div class="select-group">
+              <label for="topping-select">Topping</label>
+              <select id="topping-select">
+                <option value="none">Tanpa topping</option>
+                <option value="boba">Boba (+Rp 3.000)</option>
+                <option value="cream">Whipped Cream (+Rp 5.000)</option>
+                <option value="jelly">Fruit Jelly (+Rp 4.000)</option>
+              </select>
+            </div>
+          </div>
+          <div class="order-summary">
+            <h3>Ringkasan pesanan</h3>
+            <p id="summary-item">Minuman: Berry Bliss</p>
+            <p id="summary-size">Ukuran: Reguler</p>
+            <p id="summary-topping">Topping: Tanpa topping</p>
+            <p id="summary-total">Total: Rp 24.000</p>
+            <button class="btn btn-primary" id="add-order-btn" type="button">Masukkan ke keranjang</button>
+            <p id="order-message" class="order-message">Pesanan siap dibuat.</p>
+          </div>
+        </div>
+      </section>
+
+      <section id="testimoni" class="section">
+        <div class="section-heading">
+          <p class="eyebrow">Testimoni</p>
+          <h2>Apa yang pelanggan bilang tentang MoodDrink</h2>
+        </div>
+        <div class="testimonial-grid">
+          <article class="testimonial-card">
+            <p>“Warna aplikasinya bikin saya ingin terus buka. Minumannya juga fresh banget!”</p>
+            <strong>- Naila, 22 tahun</strong>
+          </article>
+          <article class="testimonial-card">
+            <p>“Proses pesanannya cepat dan sangat praktis. Cocok untuk saat saya sedang buru-buru.”</p>
+            <strong>- Fajar, 28 tahun</strong>
+          </article>
+        </div>
+      </section>
+
+      <section class="section steps-section">
+        <div class="section-heading">
+          <p class="eyebrow">Cara pesan</p>
+          <h2>Hanya 3 langkah untuk menikmati minuman favoritmu</h2>
+        </div>
+        <div class="step-grid">
+          <article class="step-card">
+            <h3>1. Pilih menu</h3>
+            <p>Temukan minuman sesuai mood dan pilih topping yang kamu suka.</p>
+          </article>
+          <article class="step-card">
+            <h3>2. Buat pesanan</h3>
+            <p>Atur ukuran dan isi ringkasan dengan cepat.</p>
+          </article>
+          <article class="step-card">
+            <h3>3. Tunggu diantar</h3>
+            <p>Pesanan akan diproses dan siap sampai ke tempatmu.</p>
+          </article>
+        </div>
+      </section>
+
+      <section class="section faq-section">
+        <div class="section-heading">
+          <p class="eyebrow">FAQ</p>
+          <h2>Informasi singkat sebelum kamu memesan</h2>
+        </div>
+        <div class="faq-list">
+          <div class="faq-item">Apakah bisa pickup di toko? Ya, tersedia opsi ambil sendiri.</div>
+          <div class="faq-item">Apakah ada promo khusus member? Ya, tersedia voucher bulanan dan poin reward.</div>
+          <div class="faq-item">Berapa lama estimasi pengiriman? Sekitar 15-30 menit tergantung jarak.</div>
+        </div>
+      </section>
+
+      <section class="section newsletter-section">
+        <div class="newsletter-card">
+          <div>
+            <p class="eyebrow">Dapatkan promo</p>
+            <h2>Langganan update terbaru MoodDrink</h2>
+            <p>Masukkan emailmu untuk mendapat info promo, voucher, dan menu baru.</p>
+          </div>
+          <form id="subscribe-form" class="subscribe-form">
+            <input type="email" name="email" placeholder="Alamat email" required />
+            <button class="btn btn-primary" type="submit">Kirim</button>
+          </form>
+          <p id="subscribe-message" class="subscribe-message"></p>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <p>© <span id="year"></span> MoodDrink. Segarkan hari, satu sip setiap saat.</p>
+      <p><a href="admin.html">Admin</a></p>
+    </footer>
+
+    <div class="modal-overlay" id="checkout-modal" aria-hidden="true">
+      <div class="modal-box">
+        <button class="modal-close" id="modal-close" type="button" aria-label="Tutup">×</button>
+        <h3>Checkout Ringkas</h3>
+        <form id="checkout-form">
+          <label>Nama
+            <input type="text" name="name" placeholder="Nama penerima" required />
+          </label>
+          <label>Nomor kontak
+            <input type="tel" name="phone" placeholder="Nomor WhatsApp" required />
+          </label>
+          <label>Alamat
+            <input type="text" name="address" placeholder="Alamat lengkap" required />
+          </label>
+          <label>Metode pengiriman
+            <select name="fulfillment" id="fulfillment-select">
+              <option value="delivery">Delivery</option>
+              <option value="pickup">Pickup di outlet</option>
+            </select>
+          </label>
+          <label>Estimasi jarak
+            <select name="distance" id="distance-select">
+              <option value="near">0-3 km</option>
+              <option value="mid">3-6 km</option>
+              <option value="far">6-10 km</option>
+            </select>
+          </label>
+          <label>Kode promo
+            <input type="text" name="promo" placeholder="MOODDAY / TOPPING" />
+          </label>
+          <label>Pembayaran
+            <select name="payment">
+              <option value="e-wallet">E-Wallet</option>
+              <option value="transfer">Transfer Bank</option>
+              <option value="cod">COD</option>
+              <option value="card">Kartu</option>
+            </select>
+          </label>
+          <div class="checkout-preview" id="checkout-preview">Total sementara: Rp 0</div>
+          <button class="btn btn-primary" type="submit">Konfirmasi Pesanan</button>
+        </form>
+      </div>
+    </div>
+
+    <div class="modal-overlay" id="product-modal" aria-hidden="true">
+      <div class="modal-box">
+        <button class="modal-close" id="product-modal-close" type="button" aria-label="Tutup">×</button>
+        <h3 id="product-modal-title">Nama Produk</h3>
+        <img id="product-modal-image" class="modal-product-image" src="" alt="" />
+        <p id="product-modal-desc">Deskripsi singkat produk.</p>
+        <p id="product-modal-meta" class="mini-note">Mood fresh • 15 menit</p>
+        <p id="product-modal-price"><strong>Rp 0</strong></p>
+        <div class="variant-grid">
+          <label>Ukuran
+            <select id="modal-size-select">
+              <option value="regular">Reguler</option>
+              <option value="large">Large (+Rp 4.000)</option>
+            </select>
+          </label>
+          <label>Gula
+            <select id="modal-sugar-select">
+              <option value="normal">Normal</option>
+              <option value="less">Less sugar</option>
+              <option value="no-sugar">Tanpa gula</option>
+            </select>
+          </label>
+          <label>Es
+            <select id="modal-ice-select">
+              <option value="normal">Normal</option>
+              <option value="less">Less ice</option>
+              <option value="extra">Extra ice</option>
+            </select>
+          </label>
+          <label>Topping
+            <select id="modal-topping-select">
+              <option value="none">Tanpa topping</option>
+              <option value="boba">Boba (+Rp 3.000)</option>
+              <option value="cream">Whipped Cream (+Rp 5.000)</option>
+              <option value="jelly">Fruit Jelly (+Rp 4.000)</option>
+            </select>
+          </label>
+        </div>
+        <div style="display:flex;gap:10px;margin-top:12px;">
+          <button class="btn btn-primary modal-add-btn" id="product-modal-add">Tambah ke keranjang</button>
+          <button class="btn btn-secondary" id="product-modal-close-2">Tutup</button>
+        </div>
+      </div>
+    </div>
+
+    <script src="script.js"></script>
+  </body>
+</html>

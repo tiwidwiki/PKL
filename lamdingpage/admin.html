@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="id">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate, max-age=0" />
+    <meta http-equiv="Pragma" content="no-cache" />
+    <title>MoodDrink Admin</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <main style="max-width:900px;margin:40px auto;padding:20px;">
+      <h1>Admin MoodDrink</h1>
+      <div id="admin-login">
+        <p>Masuk untuk mengelola produk (prototype).</p>
+        <label>Password: <input id="admin-password" type="password" /></label>
+        <button id="admin-login-btn" class="btn btn-primary">Login</button>
+        <p style="color:var(--coral);font-weight:700;" id="admin-login-msg"></p>
+      </div>
+      <div id="admin-panel" style="display:none;">
+        <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;">
+          <h2>Kelola Produk</h2>
+          <button id="admin-logout-btn" class="btn btn-secondary" type="button">Logout</button>
+        </div>
+        <div id="admin-stats" class="stats" style="padding:0;margin:12px 0 18px;max-width:none;"></div>
+        <form id="admin-add-form">
+          <input id="p-name" placeholder="Nama produk" required />
+          <input id="p-price" placeholder="Harga (angka)" required />
+          <input id="p-desc" placeholder="Deskripsi" />
+          <select id="p-category" required>
+            <option value="">-- Pilih kategori --</option>
+            <option value="juice">Juice Fresh</option>
+            <option value="smoothie">Smoothie Creamy</option>
+            <option value="coffee">Coffee Mood</option>
+            <option value="tea">Tea Spark</option>
+            <option value="ice-blend">Ice Blend</option>
+            <option value="snack">Snack</option>
+          </select>
+          <select id="p-mood">
+            <option value="fresh">Fresh</option>
+            <option value="happy">Happy</option>
+            <option value="focus">Focus</option>
+            <option value="relax">Relax</option>
+          </select>
+          <input id="p-image" placeholder="URL foto produk" />
+          <input id="p-stock" type="number" placeholder="Stok" value="10" min="0" />
+          <button class="btn btn-primary" type="submit">Tambah / Simpan</button>
+        </form>
+        <div id="admin-list" style="margin-top:18px;"></div>
+        <div style="margin-top:20px;">
+          <h3>Pesanan Masuk</h3>
+          <p style="font-size:0.95rem;color:#444;margin-bottom:8px;">Kelola status pesanan: baru, diproses, siap kirim, dan selesai.</p>
+          <div id="admin-transactions"></div>
+        </div>
+      </div>
+      <p style="margin-top:24px;">Kembali ke <a href="index.html">landing page</a>.</p>
+    </main>
+    <script src="admin.js?v=2"></script>
+  </body>
+</html>
