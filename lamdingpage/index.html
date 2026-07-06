@@ -220,6 +220,18 @@
           <p class="eyebrow">Akun pengguna</p>
           <h2>Profil, preferensi rasa, wishlist, dan riwayat pesanan.</h2>
         </div>
+        <div class="auth-card" id="auth-card">
+          <div>
+            <h3 id="auth-title">Login pengguna</h3>
+            <p class="mini-note" id="auth-status">Silakan login sebelum checkout pesanan.</p>
+          </div>
+          <form id="login-form" class="login-form">
+            <input type="email" name="loginEmail" placeholder="Email" required />
+            <input type="password" name="loginPassword" placeholder="Password" required minlength="4" />
+            <button class="btn btn-primary" type="submit">Login</button>
+          </form>
+          <button class="btn btn-secondary" id="logout-btn" type="button" hidden>Logout</button>
+        </div>
         <div class="account-layout">
           <form id="profile-form" class="profile-card">
             <label>Nama

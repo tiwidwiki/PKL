@@ -53,6 +53,10 @@ const profileMessage = document.getElementById('profile-message');
 const historyList = document.getElementById('history-list');
 const pointsSummary = document.getElementById('points-summary');
 const loyaltyBadge = document.getElementById('loyalty-badge');
+const authTitle = document.getElementById('auth-title');
+const authStatus = document.getElementById('auth-status');
+const loginForm = document.getElementById('login-form');
+const logoutButton = document.getElementById('logout-btn');
 
 let cartItems = 0;
 let selectedProductId = '';
@@ -116,6 +120,15 @@ function saveCart(cart) {
 
 function getTransactions() {
   return readStore('mood_transactions', []);
+}
+
+function getUser() {
+  return readStore('mood_user', null);
+}
+
+function isLoggedIn() {
+  const user = getUser();
+  return Boolean(user?.email);
 }
 
 function getDeliveryFee() {
@@ -275,6 +288,12 @@ function openCheckout() {
     if (notificationMessage) notificationMessage.textContent = 'Keranjang masih kosong. Tambahkan menu favoritmu dulu.';
     return;
   }
+  if (!isLoggedIn()) {
+    if (notificationMessage) notificationMessage.textContent = 'Silakan login dulu sebelum checkout.';
+    if (authStatus) authStatus.textContent = 'Login diperlukan sebelum membeli.';
+    document.getElementById('akun')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    return;
+  }
   checkoutModal?.classList.add('active');
   checkoutModal?.setAttribute('aria-hidden', 'false');
 }
@@ -344,12 +363,29 @@ function saveTransaction(formData) {
 
 function renderProfile() {
   const profile = readStore('mood_profile', {});
+  const user = getUser();
   if (profileForm && Object.keys(profile).length) {
     profileForm.profileName.value = profile.name || '';
     profileForm.profilePhone.value = profile.phone || '';
     profileForm.profileAddress.value = profile.address || '';
     profileForm.profileTaste.value = profile.taste || 'fresh';
   }
+  const checkoutNameInput = checkoutForm?.elements?.name;
+  if (checkoutNameInput && user?.email && !checkoutNameInput.value) {
+    checkoutNameInput.value = profile.name || user.email.split('@')[0];
+  }
+}
+
+function renderAuth() {
+  const user = getUser();
+  if (authTitle) authTitle.textContent = user?.email ? 'Akun aktif' : 'Login pengguna';
+  if (authStatus) {
+    authStatus.textContent = user?.email
+      ? `Login sebagai ${user.email}. Kamu sudah bisa checkout.`
+      : 'Silakan login sebelum checkout pesanan.';
+  }
+  if (loginForm) loginForm.hidden = Boolean(user?.email);
+  if (logoutButton) logoutButton.hidden = !user?.email;
 }
 
 function renderHistory() {
@@ -375,6 +411,7 @@ function renderHistory() {
 }
 
 function refresh() {
+  renderAuth();
   renderProducts();
   renderDrinkOptions();
   updateSummary();
@@ -449,6 +486,12 @@ productModal?.addEventListener('click', (event) => {
 
 checkoutForm?.addEventListener('submit', (event) => {
   event.preventDefault();
+  if (!isLoggedIn()) {
+    alert('Silakan login dulu sebelum membeli.');
+    closeCheckout();
+    document.getElementById('akun')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    return;
+  }
   if (!getCart().length) {
     alert('Keranjang masih kosong.');
     return;
@@ -471,6 +514,24 @@ profileForm?.addEventListener('submit', (event) => {
     taste: formData.get('profileTaste')
   });
   if (profileMessage) profileMessage.textContent = 'Profil berhasil disimpan.';
+});
+
+loginForm?.addEventListener('submit', (event) => {
+  event.preventDefault();
+  const formData = new FormData(loginForm);
+  const email = String(formData.get('loginEmail') || '').trim().toLowerCase();
+  if (!email) return;
+  writeStore('mood_user', { email, loggedInAt: new Date().toISOString() });
+  loginForm.reset();
+  renderAuth();
+  renderProfile();
+  if (notificationMessage) notificationMessage.textContent = 'Login berhasil. Kamu bisa melanjutkan checkout.';
+});
+
+logoutButton?.addEventListener('click', () => {
+  localStorage.removeItem('mood_user');
+  renderAuth();
+  if (notificationMessage) notificationMessage.textContent = 'Kamu sudah logout. Login lagi sebelum checkout berikutnya.';
 });
 
 subscribeForm?.addEventListener('submit', (event) => {
