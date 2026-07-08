@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate, max-age=0" />
+    <meta http-equiv="Pragma" content="no-cache" />
+    <title>Akun Pelanggan | MoodDrink</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <main class="customer-shell">
+      <div class="customer-topline">
+        <a class="brand" href="index.html">
+          <span class="brand-mark" aria-label="MoodDrink logo">
+            <span class="brand-mark-cup"></span>
+          </span>
+          <span>MoodDrink</span>
+        </a>
+      </div>
+
+      <section id="customer-login" class="customer-login-card">
+        <div>
+          <p class="eyebrow">Akun pelanggan</p>
+          <h1>Login Pelanggan</h1>
+          <p class="mini-note">Masuk dulu untuk checkout, menyimpan profil, dan melihat riwayat pesanan.</p>
+        </div>
+        <form id="customer-login-form" class="customer-login-form">
+          <label>Email
+            <input type="email" name="loginEmail" placeholder="nama@email.com" required />
+          </label>
+          <label>Password
+            <input type="password" name="loginPassword" placeholder="Minimal 4 karakter" required minlength="4" />
+          </label>
+          <button class="btn btn-primary" type="submit">Login</button>
+          <p class="order-message" id="customer-login-msg"></p>
+        </form>
+      </section>
+
+      <section id="customer-panel" class="customer-panel" style="display:none;">
+        <div class="customer-topline">
+          <div>
+            <p class="eyebrow">Member MoodDrink</p>
+            <h1>Akun Pelanggan</h1>
+            <p class="mini-note" id="customer-status">Login sebagai pelanggan.</p>
+          </div>
+          <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;">
+            <a class="btn btn-secondary" href="index.html">Kembali Belanja</a>
+            <button class="btn btn-secondary" id="customer-logout-btn" type="button">Logout</button>
+          </div>
+        </div>
+
+        <div class="notification-card" id="customer-notification-card">
+          <div class="panel-title-row">
+            <h3>Notifikasi pesanan</h3>
+            <span class="loyalty-badge" id="notification-count">0 baru</span>
+          </div>
+          <div id="notification-list" class="notification-list"></div>
+        </div>
+
+        <div class="account-layout">
+          <form id="profile-form" class="profile-card">
+            <h3>Profil pelanggan</h3>
+            <label>Nama
+              <input type="text" name="profileName" placeholder="Nama kamu" />
+            </label>
+            <label>Nomor kontak
+              <input type="tel" name="profilePhone" placeholder="08xxxxxxxxxx" />
+            </label>
+            <label>Alamat tersimpan
+              <input type="text" name="profileAddress" placeholder="Alamat utama" />
+            </label>
+            <label>Estimasi jarak alamat
+              <select name="profileDistance">
+                <option value="near">0-3 km</option>
+                <option value="mid">3-6 km</option>
+                <option value="far">6-10 km</option>
+              </select>
+            </label>
+            <label>Preferensi rasa
+              <select name="profileTaste">
+                <option value="fresh">Fresh dan ringan</option>
+                <option value="creamy">Creamy</option>
+                <option value="coffee">Kopi kuat</option>
+                <option value="less-sugar">Less sugar</option>
+              </select>
+            </label>
+            <button class="btn btn-primary" type="submit">Simpan Profil</button>
+            <p class="order-message" id="profile-message"></p>
+          </form>
+
+          <div class="history-card">
+            <div class="panel-title-row">
+              <h3>Riwayat pesanan</h3>
+              <span class="loyalty-badge" id="loyalty-badge">Silver</span>
+            </div>
+            <p class="mini-note" id="points-summary">0 poin reward</p>
+            <div id="history-list" class="history-list"></div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <script src="akun.js"></script>
+  </body>
+</html>

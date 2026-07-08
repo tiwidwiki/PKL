@@ -23,10 +23,11 @@
         <a href="#home">Home</a>
         <a href="#menu">Menu</a>
         <a href="#checkout">Checkout</a>
-        <a href="#akun">Akun</a>
+        <a href="akun.html">Akun</a>
         <a href="#keunggulan">Keunggulan</a>
         <a href="admin.html">Admin</a>
       </nav>
+      <a class="login-pill" href="akun.html">Login</a>
       <button class="cart-pill" id="cart-trigger" type="button">Keranjang <span id="cart-count">0</span></button>
     </header>
 
@@ -40,6 +41,7 @@
           </p>
           <div class="hero-actions">
             <a class="btn btn-primary" href="#menu">Lihat Menu</a>
+            <a class="btn btn-secondary" href="akun.html">Login Pelanggan</a>
             <a class="btn btn-secondary" href="#keunggulan">Kenapa MoodDrink?</a>
           </div>
           <ul class="hero-highlights">
@@ -57,6 +59,7 @@
             <h3>Mango Chill Smoothie</h3>
             <p>Rasa mangga segar + yogurt lembut</p>
             <strong>Rp 28.000</strong>
+            <button class="btn btn-primary hero-order-btn" id="hero-best-seller-btn" type="button">Checkout</button>
           </div>
         </div>
       </section>
@@ -209,58 +212,15 @@
               <span>Ongkir</span><strong id="cart-delivery">Rp 0</strong>
               <span>Total</span><strong id="cart-grand-total">Rp 0</strong>
             </div>
-            <button class="btn btn-primary" id="checkout-trigger" type="button">Lanjut Checkout</button>
-            <p class="mini-note" id="notification-message">Notifikasi status pesanan akan muncul setelah checkout.</p>
-          </div>
-        </div>
-      </section>
-
-      <section id="akun" class="section account-section">
-        <div class="section-heading">
-          <p class="eyebrow">Akun pengguna</p>
-          <h2>Profil, preferensi rasa, wishlist, dan riwayat pesanan.</h2>
-        </div>
-        <div class="auth-card" id="auth-card">
-          <div>
-            <h3 id="auth-title">Login pengguna</h3>
-            <p class="mini-note" id="auth-status">Silakan login sebelum checkout pesanan.</p>
-          </div>
-          <form id="login-form" class="login-form">
-            <input type="email" name="loginEmail" placeholder="Email" required />
-            <input type="password" name="loginPassword" placeholder="Password" required minlength="4" />
-            <button class="btn btn-primary" type="submit">Login</button>
-          </form>
-          <button class="btn btn-secondary" id="logout-btn" type="button" hidden>Logout</button>
-        </div>
-        <div class="account-layout">
-          <form id="profile-form" class="profile-card">
-            <label>Nama
-              <input type="text" name="profileName" placeholder="Nama kamu" />
-            </label>
-            <label>Nomor kontak
-              <input type="tel" name="profilePhone" placeholder="08xxxxxxxxxx" />
-            </label>
-            <label>Alamat tersimpan
-              <input type="text" name="profileAddress" placeholder="Alamat utama" />
-            </label>
-            <label>Preferensi rasa
-              <select name="profileTaste">
-                <option value="fresh">Fresh dan ringan</option>
-                <option value="creamy">Creamy</option>
-                <option value="coffee">Kopi kuat</option>
-                <option value="less-sugar">Less sugar</option>
+            <label class="checkout-option">Metode pembayaran
+              <select id="cart-payment-select">
+                <option value="e-wallet">E-Wallet / QRIS</option>
+                <option value="cod">COD</option>
+                <option value="card">Kartu</option>
               </select>
             </label>
-            <button class="btn btn-primary" type="submit">Simpan Profil</button>
-            <p class="order-message" id="profile-message"></p>
-          </form>
-          <div class="history-card">
-            <div class="panel-title-row">
-              <h3>Riwayat pesanan</h3>
-              <span class="loyalty-badge" id="loyalty-badge">Silver</span>
-            </div>
-            <p class="mini-note" id="points-summary">0 poin reward</p>
-            <div id="history-list" class="history-list"></div>
+            <button class="btn btn-primary" id="checkout-trigger" type="button">Lanjut Checkout</button>
+            <p class="mini-note" id="notification-message">Notifikasi status pesanan akan muncul setelah checkout.</p>
           </div>
         </div>
       </section>
@@ -387,7 +347,7 @@
 
     <footer class="footer">
       <p>© <span id="year"></span> MoodDrink. Segarkan hari, satu sip setiap saat.</p>
-      <p><a href="admin.html">Admin</a></p>
+      <p><a href="akun.html">Akun Pelanggan</a> | <a href="admin.html">Admin</a></p>
     </footer>
 
     <div class="modal-overlay" id="checkout-modal" aria-hidden="true">
@@ -421,13 +381,31 @@
             <input type="text" name="promo" placeholder="MOODDAY / TOPPING" />
           </label>
           <label>Pembayaran
-            <select name="payment">
+            <select name="payment" id="payment-select">
               <option value="e-wallet">E-Wallet</option>
-              <option value="transfer">Transfer Bank</option>
               <option value="cod">COD</option>
               <option value="card">Kartu</option>
             </select>
           </label>
+          <div class="payment-detail-box" id="payment-detail-box">
+            <div class="payment-fields payment-fields-ewallet" data-payment-fields="e-wallet">
+              <div class="qris-panel">
+                <div class="qris-code" aria-label="Kode QRIS MoodDrink">
+                  <span></span><span></span><span></span><span></span>
+                  <span></span><span></span><span></span><span></span>
+                  <span></span><span></span><span></span><span></span>
+                  <span></span><span></span><span></span><span></span>
+                </div>
+                <div>
+                  <strong>Scan QRIS MoodDrink</strong>
+                  <p class="mini-note">Gunakan GoPay, OVO, DANA, ShopeePay, atau aplikasi e-wallet lain yang mendukung QRIS.</p>
+                  <p class="mini-note">Kode: QRIS-MOODDRINK-2026</p>
+                </div>
+              </div>
+            </div>
+            <p class="mini-note payment-card-note" data-payment-fields="card">Pembayaran kartu diproses saat konfirmasi pesanan.</p>
+            <p class="mini-note payment-cod-note" data-payment-fields="cod">Pembayaran COD dibayar saat pesanan diterima.</p>
+          </div>
           <div class="checkout-preview" id="checkout-preview">Total sementara: Rp 0</div>
           <button class="btn btn-primary" type="submit">Konfirmasi Pesanan</button>
         </form>

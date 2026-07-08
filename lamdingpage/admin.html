@@ -20,7 +20,10 @@
       <div id="admin-panel" style="display:none;">
         <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;">
           <h2>Kelola Produk</h2>
-          <button id="admin-logout-btn" class="btn btn-secondary" type="button">Logout</button>
+          <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;">
+            <a class="btn btn-secondary" href="index.html">Landing Page</a>
+            <button id="admin-logout-btn" class="btn btn-secondary" type="button">Logout</button>
+          </div>
         </div>
         <div id="admin-stats" class="stats" style="padding:0;margin:12px 0 18px;max-width:none;"></div>
         <form id="admin-add-form">
@@ -53,7 +56,6 @@
           <div id="admin-transactions"></div>
         </div>
       </div>
-      <p style="margin-top:24px;">Kembali ke <a href="index.html">landing page</a>.</p>
     </main>
     <script src="admin.js?v=2"></script>
   </body>

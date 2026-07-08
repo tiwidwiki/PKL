@@ -180,21 +180,29 @@
 
     transactions.forEach((transaction) => {
       const row = document.createElement('div');
+      row.className = 'admin-order-row';
       row.style.border = '1px solid var(--border)';
       row.style.borderRadius = '16px';
       row.style.padding = '12px';
       row.style.marginBottom = '10px';
       row.style.display = 'grid';
-      row.style.gridTemplateColumns = '1fr auto';
+      row.style.gridTemplateColumns = 'minmax(0, 1fr) 150px';
       row.style.gap = '12px';
       const itemsHtml = (transaction.items || [])
         .map((item) => `${item.qty || 1}x ${item.name} (${item.size || 'regular'}, ${item.topping || 'none'})`)
         .join('<br/>');
+      const paymentDetail = transaction.paymentDetail || {};
+      const paymentInfo = transaction.payment === 'e-wallet'
+        ? `E-Wallet QRIS | ${paymentDetail.qrisCode || 'QRIS-MOODDRINK-2026'}`
+        : transaction.payment === 'card'
+          ? 'Kartu'
+          : 'COD';
       row.innerHTML = `
         <div>
           <strong>${transaction.id || 'Pesanan'}</strong>
           <div style="font-size:0.95rem;color:#666">${transaction.name || '-'} | ${transaction.phone || '-'} | ${new Date(transaction.createdAt).toLocaleString('id-ID')}</div>
           <div style="font-size:0.95rem;color:#666">${transaction.fulfillment || 'delivery'} | ${transaction.payment || '-'} | ${transaction.address || '-'}</div>
+          <div style="font-size:0.95rem;color:#666">Pembayaran: ${paymentInfo}</div>
           <div style="margin-top:8px">${itemsHtml}</div>
           <strong>${rupiah(transaction.total)}</strong>
         </div>
@@ -202,7 +210,9 @@
       const actions = document.createElement('div');
       actions.style.display = 'grid';
       actions.style.gap = '8px';
+      actions.style.alignContent = 'start';
       const status = document.createElement('select');
+      status.className = 'admin-order-control';
       ['baru', 'sedang diproses', 'siap kirim', 'selesai'].forEach((value) => {
         const option = document.createElement('option');
         option.value = value;
@@ -211,10 +221,10 @@
       });
       status.value = transaction.status || 'baru';
       const save = document.createElement('button');
-      save.className = 'btn btn-primary';
+      save.className = 'btn btn-primary admin-order-control';
       save.textContent = 'Update';
       const del = document.createElement('button');
-      del.className = 'btn btn-secondary';
+      del.className = 'btn btn-secondary admin-order-control';
       del.textContent = 'Hapus';
       actions.appendChild(status);
       actions.appendChild(save);
@@ -229,6 +239,9 @@
         if (index === -1) return;
         next[index].status = status.value;
         next[index].handled = status.value === 'selesai';
+        next[index].notificationUnread = true;
+        next[index].notificationMessage = `Pesanan ${next[index].id} sekarang ${status.value}.`;
+        next[index].notificationUpdatedAt = new Date().toISOString();
         saveTransactions(next);
         renderAll();
       });

@@ -43,23 +43,27 @@ const cartGrandTotal = document.getElementById('cart-grand-total');
 const notificationMessage = document.getElementById('notification-message');
 const fulfillmentSelect = document.getElementById('fulfillment-select');
 const distanceSelect = document.getElementById('distance-select');
+const cartPaymentSelect = document.getElementById('cart-payment-select');
+const paymentSelect = document.getElementById('payment-select');
+const paymentDetailBox = document.getElementById('payment-detail-box');
 const checkoutPreview = document.getElementById('checkout-preview');
 const modalSizeSelect = document.getElementById('modal-size-select');
 const modalSugarSelect = document.getElementById('modal-sugar-select');
 const modalIceSelect = document.getElementById('modal-ice-select');
 const modalToppingSelect = document.getElementById('modal-topping-select');
-const profileForm = document.getElementById('profile-form');
-const profileMessage = document.getElementById('profile-message');
-const historyList = document.getElementById('history-list');
-const pointsSummary = document.getElementById('points-summary');
-const loyaltyBadge = document.getElementById('loyalty-badge');
-const authTitle = document.getElementById('auth-title');
-const authStatus = document.getElementById('auth-status');
-const loginForm = document.getElementById('login-form');
-const logoutButton = document.getElementById('logout-btn');
-
+const heroBestSellerButton = document.getElementById('hero-best-seller-btn');
 let cartItems = 0;
 let selectedProductId = '';
+
+const HERO_BEST_SELLER = {
+  id: 'mango-chill',
+  name: 'Mango Chill Smoothie',
+  price: 28000,
+  size: 'regular',
+  topping: 'none',
+  sugar: 'normal',
+  ice: 'normal'
+};
 
 const DEFAULT_PRODUCTS = [
   { id: 'berry', name: 'Berry Bliss', price: 24000, desc: 'Stroberi, blueberry, yogurt, dan aftertaste creamy.', category: 'smoothie', mood: 'happy', flavor: 'berry', stock: 15, rating: 4.8, sold: 240, createdAt: '2026-06-01', prep: 12, image: 'https://images.unsplash.com/photo-1553530666-ba11a7da3888?auto=format&fit=crop&w=900&q=80' },
@@ -126,9 +130,45 @@ function getUser() {
   return readStore('mood_user', null);
 }
 
+function getUserStoreKey(baseKey) {
+  const email = getUser()?.email;
+  return email ? `${baseKey}_${email}` : baseKey;
+}
+
+function getProfile() {
+  return readStore(getUserStoreKey('mood_profile'), {});
+}
+
+function getCheckoutContact() {
+  return readStore(getUserStoreKey('mood_checkout_contact'), {});
+}
+
 function isLoggedIn() {
   const user = getUser();
   return Boolean(user?.email);
+}
+
+function estimateDistanceFromAddress(address) {
+  const text = String(address || '').toLowerCase();
+  if (!text) return 'near';
+  if (text.includes('luar kota') || text.includes('kabupaten') || text.includes('perumahan') || text.length > 80) return 'far';
+  if (text.includes('jalan') || text.includes('jl') || text.includes('komplek') || text.length > 45) return 'mid';
+  return 'near';
+}
+
+function getSavedCheckoutDetails() {
+  const profile = getProfile();
+  const contact = getCheckoutContact();
+  const address = profile.address || contact.address || '';
+  return {
+    name: profile.name || contact.name || '',
+    phone: profile.phone || contact.phone || '',
+    address,
+    distance: profile.distance || contact.distance || estimateDistanceFromAddress(address),
+    fulfillment: contact.fulfillment || 'delivery',
+    payment: contact.payment || 'e-wallet',
+    paymentDetail: contact.paymentDetail || {}
+  };
 }
 
 function getDeliveryFee() {
@@ -137,11 +177,15 @@ function getDeliveryFee() {
 }
 
 function getCartTotals() {
-  const cart = getCart();
+  const cart = getSelectedCart();
   const subtotal = cart.reduce((sum, item) => sum + ((item.price || 0) * (item.qty || 1)), 0);
   const discount = subtotal >= 75000 ? 10000 : 0;
   const delivery = cart.length ? getDeliveryFee() : 0;
   return { subtotal, discount, delivery, total: Math.max(0, subtotal - discount + delivery) };
+}
+
+function getSelectedCart() {
+  return getCart().filter((item) => item.selected !== false);
 }
 
 function addToCart(item) {
@@ -150,8 +194,9 @@ function addToCart(item) {
   const existing = cart.find((cartItem) => cartItem.key === key);
   if (existing) {
     existing.qty = (existing.qty || 1) + (item.qty || 1);
+    existing.selected = true;
   } else {
-    cart.push({ key, qty: 1, ...item });
+    cart.push({ key, qty: 1, selected: true, ...item });
   }
   saveCart(cart);
 }
@@ -160,6 +205,16 @@ function changeCartQty(key, delta) {
   const next = getCart()
     .map((item) => item.key === key ? { ...item, qty: (item.qty || 1) + delta } : item)
     .filter((item) => item.qty > 0);
+  saveCart(next);
+}
+
+function toggleCartSelection(key, selected) {
+  const next = getCart().map((item) => item.key === key ? { ...item, selected } : item);
+  saveCart(next);
+}
+
+function removeSelectedCartItems() {
+  const next = getCart().filter((item) => item.selected === false);
   saveCart(next);
 }
 
@@ -259,6 +314,10 @@ function renderCart() {
       const row = document.createElement('div');
       row.className = 'cart-item';
       row.innerHTML = `
+        <label class="cart-select">
+          <input class="cart-select-input" data-key="${item.key}" type="checkbox" ${item.selected !== false ? 'checked' : ''} />
+          <span>Pilih</span>
+        </label>
         <div>
           <strong>${item.name}</strong>
           <p class="mini-note">${item.size || 'regular'} • ${getToppingLabel(item.topping)} • gula ${item.sugar || 'normal'} • es ${item.ice || 'normal'}</p>
@@ -279,23 +338,89 @@ function renderCart() {
   if (cartDiscount) cartDiscount.textContent = `- ${rupiah(totals.discount)}`;
   if (cartDelivery) cartDelivery.textContent = rupiah(totals.delivery);
   if (cartGrandTotal) cartGrandTotal.textContent = rupiah(totals.total);
-  if (checkoutPreview) checkoutPreview.textContent = `Total sementara: ${rupiah(totals.total)}`;
+  const selectedCount = getSelectedCart().reduce((sum, item) => sum + (item.qty || 1), 0);
+  if (checkoutPreview) checkoutPreview.textContent = `Total ${selectedCount} item dipilih: ${rupiah(totals.total)}`;
+}
+
+function fillCheckoutFromSavedDetails() {
+  if (!checkoutForm) return;
+  const details = getSavedCheckoutDetails();
+  const fields = checkoutForm.elements;
+  if (fields.name) fields.name.value = details.name;
+  if (fields.phone) fields.phone.value = details.phone;
+  if (fields.address) fields.address.value = details.address;
+  if (fields.fulfillment) fields.fulfillment.value = details.fulfillment;
+  if (fields.distance) fields.distance.value = details.distance;
+  const selectedPayment = cartPaymentSelect?.value || details.payment;
+  if (fields.payment) fields.payment.value = selectedPayment;
+  if (cartPaymentSelect) cartPaymentSelect.value = selectedPayment;
+  updatePaymentFields();
+}
+
+function getPaymentDetail(formData) {
+  const payment = formData.get('payment');
+  if (payment === 'e-wallet') {
+    return {
+      qrisCode: 'QRIS-MOODDRINK-2026'
+    };
+  }
+  if (payment === 'card') return { method: 'card' };
+  return {};
+}
+
+function validatePaymentDetail(formData) {
+  const payment = formData.get('payment');
+  if (payment === 'cod' || payment === 'card') return true;
+  const detail = getPaymentDetail(formData);
+  if (payment === 'e-wallet') return Boolean(detail.qrisCode);
+  return false;
+}
+
+function updatePaymentFields() {
+  if (!checkoutForm || !paymentSelect) return;
+  const selectedPayment = paymentSelect.value;
+  const paymentInputs = paymentDetailBox?.querySelectorAll('input, select') || [];
+  paymentInputs.forEach((input) => {
+    input.required = false;
+  });
+  paymentDetailBox?.querySelectorAll('[data-payment-fields]').forEach((section) => {
+    const isActive = section.dataset.paymentFields === selectedPayment;
+    section.hidden = !isActive;
+    if (isActive && selectedPayment === 'e-wallet') {
+      section.querySelectorAll('input, select').forEach((input) => {
+        input.required = true;
+      });
+    }
+  });
 }
 
 function openCheckout() {
-  renderCart();
   if (!getCart().length) {
     if (notificationMessage) notificationMessage.textContent = 'Keranjang masih kosong. Tambahkan menu favoritmu dulu.';
     return;
   }
-  if (!isLoggedIn()) {
-    if (notificationMessage) notificationMessage.textContent = 'Silakan login dulu sebelum checkout.';
-    if (authStatus) authStatus.textContent = 'Login diperlukan sebelum membeli.';
-    document.getElementById('akun')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  if (!getSelectedCart().length) {
+    if (notificationMessage) notificationMessage.textContent = 'Pilih minimal 1 item di keranjang sebelum checkout.';
     return;
   }
+  if (!isLoggedIn()) {
+    if (notificationMessage) {
+      notificationMessage.innerHTML = 'Silakan login di halaman akun pelanggan sebelum checkout. <a href="akun.html">Login pelanggan</a>';
+    }
+    return;
+  }
+  fillCheckoutFromSavedDetails();
+  renderCart();
   checkoutModal?.classList.add('active');
   checkoutModal?.setAttribute('aria-hidden', 'false');
+}
+
+function openCartReview() {
+  renderCart();
+  document.getElementById('checkout')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  if (!getCart().length && notificationMessage) {
+    notificationMessage.textContent = 'Keranjang masih kosong. Tambahkan menu favoritmu dulu.';
+  }
 }
 
 function closeCheckout() {
@@ -335,18 +460,20 @@ function getConfiguredProduct(product, source = 'modal') {
 }
 
 function saveTransaction(formData) {
-  const cart = getCart();
+  const cart = getSelectedCart();
   const totals = getCartTotals();
   const promo = String(formData.get('promo') || '').trim().toUpperCase();
   const promoDiscount = promo === 'MOODDAY' ? 12000 : promo === 'TOPPING' ? 5000 : 0;
   const transaction = {
     id: `MD-${Date.now()}`,
+    userEmail: getUser()?.email || '',
     name: formData.get('name'),
     phone: formData.get('phone'),
     address: formData.get('address'),
     fulfillment: formData.get('fulfillment'),
     distance: formData.get('distance'),
     payment: formData.get('payment'),
+    paymentDetail: getPaymentDetail(formData),
     promo,
     items: cart,
     subtotal: totals.subtotal,
@@ -357,67 +484,42 @@ function saveTransaction(formData) {
     handled: false,
     createdAt: new Date().toISOString()
   };
+  const savedProfile = getProfile();
+  const savedContact = {
+    name: formData.get('name'),
+    phone: formData.get('phone'),
+    address: formData.get('address'),
+    distance: formData.get('distance') || estimateDistanceFromAddress(formData.get('address')),
+    fulfillment: formData.get('fulfillment'),
+    payment: formData.get('payment'),
+    paymentDetail: getPaymentDetail(formData)
+  };
+  writeStore(getUserStoreKey('mood_profile'), {
+    ...savedProfile,
+    ...savedContact,
+    taste: savedProfile.taste || 'fresh'
+  });
+  writeStore(getUserStoreKey('mood_checkout_contact'), savedContact);
   writeStore('mood_transactions', [...getTransactions(), transaction]);
   return transaction;
 }
 
 function renderProfile() {
-  const profile = readStore('mood_profile', {});
+  const profile = getProfile();
   const user = getUser();
-  if (profileForm && Object.keys(profile).length) {
-    profileForm.profileName.value = profile.name || '';
-    profileForm.profilePhone.value = profile.phone || '';
-    profileForm.profileAddress.value = profile.address || '';
-    profileForm.profileTaste.value = profile.taste || 'fresh';
-  }
   const checkoutNameInput = checkoutForm?.elements?.name;
   if (checkoutNameInput && user?.email && !checkoutNameInput.value) {
     checkoutNameInput.value = profile.name || user.email.split('@')[0];
   }
-}
-
-function renderAuth() {
-  const user = getUser();
-  if (authTitle) authTitle.textContent = user?.email ? 'Akun aktif' : 'Login pengguna';
-  if (authStatus) {
-    authStatus.textContent = user?.email
-      ? `Login sebagai ${user.email}. Kamu sudah bisa checkout.`
-      : 'Silakan login sebelum checkout pesanan.';
-  }
-  if (loginForm) loginForm.hidden = Boolean(user?.email);
-  if (logoutButton) logoutButton.hidden = !user?.email;
-}
-
-function renderHistory() {
-  const transactions = getTransactions().slice().reverse();
-  const points = transactions.reduce((sum, item) => sum + Math.floor((item.total || 0) / 10000), 0);
-  const level = points >= 80 ? 'MoodMaster' : points >= 35 ? 'Gold' : 'Silver';
-  if (pointsSummary) pointsSummary.textContent = `${points} poin reward`;
-  if (loyaltyBadge) loyaltyBadge.textContent = level;
-  if (!historyList) return;
-  historyList.innerHTML = transactions.length ? '' : '<p class="mini-note">Belum ada riwayat pesanan.</p>';
-  transactions.slice(0, 5).forEach((transaction) => {
-    const row = document.createElement('div');
-    row.className = 'history-item';
-    row.innerHTML = `
-      <div>
-        <strong>${transaction.id}</strong>
-        <p class="mini-note">${new Date(transaction.createdAt).toLocaleString('id-ID')} • ${transaction.status || 'baru'}</p>
-      </div>
-      <strong>${rupiah(transaction.total)}</strong>
-    `;
-    historyList.appendChild(row);
-  });
+  fillCheckoutFromSavedDetails();
 }
 
 function refresh() {
-  renderAuth();
   renderProducts();
   renderDrinkOptions();
   updateSummary();
   updateCartCount();
   renderCart();
-  renderHistory();
 }
 
 if (toggle && nav) {
@@ -430,6 +532,15 @@ if (year) year.textContent = new Date().getFullYear();
 [drinkSelect, sizeSelect, toppingSelect].forEach((element) => element?.addEventListener('change', updateSummary));
 [catalogCategory, catalogMood, catalogPrice, catalogSort].forEach((element) => element?.addEventListener('change', renderProducts));
 [fulfillmentSelect, distanceSelect].forEach((element) => element?.addEventListener('change', renderCart));
+paymentSelect?.addEventListener('change', updatePaymentFields);
+cartPaymentSelect?.addEventListener('change', () => {
+  if (paymentSelect) paymentSelect.value = cartPaymentSelect.value;
+  updatePaymentFields();
+});
+checkoutForm?.elements?.address?.addEventListener('change', (event) => {
+  if (distanceSelect) distanceSelect.value = estimateDistanceFromAddress(event.target.value);
+  renderCart();
+});
 
 document.getElementById('category-select')?.addEventListener('change', () => {
   renderDrinkOptions();
@@ -456,10 +567,21 @@ cartList?.addEventListener('click', (event) => {
   changeCartQty(button.dataset.key, button.dataset.action === 'plus' ? 1 : -1);
 });
 
+cartList?.addEventListener('change', (event) => {
+  if (!event.target.classList.contains('cart-select-input')) return;
+  toggleCartSelection(event.target.dataset.key, event.target.checked);
+});
+
 addOrderButton?.addEventListener('click', () => {
   const selected = getProducts().find((product) => product.id === drinkSelect?.value) || getProducts()[0];
   addToCart(getConfiguredProduct(selected, 'quick'));
   if (orderMessage) orderMessage.textContent = 'Pesanan berhasil ditambahkan ke keranjang.';
+  openCheckout();
+});
+
+heroBestSellerButton?.addEventListener('click', () => {
+  addToCart(HERO_BEST_SELLER);
+  if (notificationMessage) notificationMessage.textContent = 'Mango Chill Smoothie masuk keranjang.';
   openCheckout();
 });
 
@@ -471,7 +593,7 @@ productModalAdd?.addEventListener('click', () => {
   if (notificationMessage) notificationMessage.textContent = `${product.name} masuk keranjang.`;
 });
 
-cartTrigger?.addEventListener('click', openCheckout);
+cartTrigger?.addEventListener('click', openCartReview);
 checkoutTrigger?.addEventListener('click', openCheckout);
 clearCartButton?.addEventListener('click', clearCart);
 modalClose?.addEventListener('click', closeCheckout);
@@ -489,49 +611,25 @@ checkoutForm?.addEventListener('submit', (event) => {
   if (!isLoggedIn()) {
     alert('Silakan login dulu sebelum membeli.');
     closeCheckout();
-    document.getElementById('akun')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    window.location.href = 'akun.html';
     return;
   }
-  if (!getCart().length) {
-    alert('Keranjang masih kosong.');
+  if (!getSelectedCart().length) {
+    alert('Pilih minimal 1 item untuk checkout.');
     return;
   }
-  const transaction = saveTransaction(new FormData(checkoutForm));
-  clearCart();
+  const formData = new FormData(checkoutForm);
+  if (!validatePaymentDetail(formData)) {
+    alert('Lengkapi detail pembayaran terlebih dulu.');
+    updatePaymentFields();
+    return;
+  }
+  const transaction = saveTransaction(formData);
+  removeSelectedCartItems();
   closeCheckout();
   checkoutForm.reset();
   if (notificationMessage) notificationMessage.textContent = `Pesanan ${transaction.id} diterima. Status: baru.`;
   alert('Pesanan berhasil dikonfirmasi. Notifikasi status tersimpan di riwayat akun.');
-});
-
-profileForm?.addEventListener('submit', (event) => {
-  event.preventDefault();
-  const formData = new FormData(profileForm);
-  writeStore('mood_profile', {
-    name: formData.get('profileName'),
-    phone: formData.get('profilePhone'),
-    address: formData.get('profileAddress'),
-    taste: formData.get('profileTaste')
-  });
-  if (profileMessage) profileMessage.textContent = 'Profil berhasil disimpan.';
-});
-
-loginForm?.addEventListener('submit', (event) => {
-  event.preventDefault();
-  const formData = new FormData(loginForm);
-  const email = String(formData.get('loginEmail') || '').trim().toLowerCase();
-  if (!email) return;
-  writeStore('mood_user', { email, loggedInAt: new Date().toISOString() });
-  loginForm.reset();
-  renderAuth();
-  renderProfile();
-  if (notificationMessage) notificationMessage.textContent = 'Login berhasil. Kamu bisa melanjutkan checkout.';
-});
-
-logoutButton?.addEventListener('click', () => {
-  localStorage.removeItem('mood_user');
-  renderAuth();
-  if (notificationMessage) notificationMessage.textContent = 'Kamu sudah logout. Login lagi sebelum checkout berikutnya.';
 });
 
 subscribeForm?.addEventListener('submit', (event) => {
@@ -543,4 +641,5 @@ subscribeForm?.addEventListener('submit', (event) => {
 window.addEventListener('storage', refresh);
 
 renderProfile();
+updatePaymentFields();
 refresh();
