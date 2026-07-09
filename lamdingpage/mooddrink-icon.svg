@@ -1,0 +1,73 @@
+<svg width="1024" height="1024" viewBox="0 0 1024 1024" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Minimal beverage app icon">
+  <defs>
+    <linearGradient id="iconRing" x1="184" y1="184" x2="840" y2="840" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#A8E6FF"/>
+      <stop offset="0.55" stop-color="#6EC6FF"/>
+      <stop offset="1" stop-color="#FF8A65"/>
+    </linearGradient>
+    <linearGradient id="cupFill" x1="340" y1="262" x2="686" y2="708" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#F4FBFF"/>
+      <stop offset="0.56" stop-color="#A8E6FF"/>
+      <stop offset="1" stop-color="#6EC6FF"/>
+    </linearGradient>
+    <linearGradient id="liquidFill" x1="384" y1="502" x2="642" y2="650" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#A8E6FF"/>
+      <stop offset="1" stop-color="#FF8A65"/>
+    </linearGradient>
+    <linearGradient id="strawStroke" x1="496" y1="188" x2="642" y2="352" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#FF8A65"/>
+      <stop offset="1" stop-color="#6EC6FF"/>
+    </linearGradient>
+    <filter id="softShadow" x="188" y="176" width="648" height="688" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+      <feDropShadow dx="0" dy="32" stdDeviation="28" flood-color="#1E3A5F" flood-opacity="0.16"/>
+    </filter>
+  </defs>
+
+  <circle cx="512" cy="512" r="360" fill="white" fill-opacity="0.92"/>
+  <circle cx="512" cy="512" r="360" stroke="url(#iconRing)" stroke-width="34"/>
+  <circle cx="512" cy="512" r="306" fill="#F4FBFF" fill-opacity="0.54"/>
+
+  <g filter="url(#softShadow)">
+    <path
+      d="M372 344C368 310 394 280 428 280C454 280 478 295 489 319L502 347C506 357 516 364 528 364C539 364 550 357 554 347L567 319C578 295 601 280 628 280C662 280 688 310 684 344L655 610C648 675 594 724 528 724H496C430 724 376 675 369 610L340 344H372Z"
+      fill="url(#cupFill)"
+    />
+    <path
+      d="M372 344C368 310 394 280 428 280C454 280 478 295 489 319L502 347C506 357 516 364 528 364C539 364 550 357 554 347L567 319C578 295 601 280 628 280C662 280 688 310 684 344L655 610C648 675 594 724 528 724H496C430 724 376 675 369 610L340 344"
+      stroke="#1E3A5F"
+      stroke-width="28"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+      fill="none"
+    />
+    <path
+      d="M403 528C440 500 474 565 512 565C550 565 585 500 622 528L606 626C599 666 565 694 524 694H500C459 694 425 666 418 626L403 528Z"
+      fill="url(#liquidFill)"
+      fill-opacity="0.92"
+    />
+    <path
+      d="M410 532C447 504 475 565 512 565C550 565 579 504 616 532"
+      stroke="white"
+      stroke-width="18"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+      opacity="0.86"
+    />
+    <path
+      d="M525 294L546 205L666 178"
+      stroke="url(#strawStroke)"
+      stroke-width="28"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    />
+  </g>
+
+  <path
+    d="M702 318C724 314 740 298 744 276C748 298 764 314 786 318C764 322 748 338 744 360C740 338 724 322 702 318Z"
+    fill="#FF8A65"
+  />
+  <path
+    d="M684 432C700 429 712 417 715 400C718 417 730 429 746 432C730 435 718 447 715 464C712 447 700 435 684 432Z"
+    fill="#6EC6FF"
+  />
+</svg>

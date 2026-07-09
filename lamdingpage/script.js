@@ -52,18 +52,15 @@ const modalSugarSelect = document.getElementById('modal-sugar-select');
 const modalIceSelect = document.getElementById('modal-ice-select');
 const modalToppingSelect = document.getElementById('modal-topping-select');
 const heroBestSellerButton = document.getElementById('hero-best-seller-btn');
+const heroBestSellerImage = document.getElementById('hero-best-seller-image');
+const heroBestSellerName = document.getElementById('hero-best-seller-name');
+const heroBestSellerDesc = document.getElementById('hero-best-seller-desc');
+const heroBestSellerPrice = document.getElementById('hero-best-seller-price');
+const heroBestSellerSold = document.getElementById('hero-best-seller-sold');
 let cartItems = 0;
 let selectedProductId = '';
 
-const HERO_BEST_SELLER = {
-  id: 'mango-chill',
-  name: 'Mango Chill Smoothie',
-  price: 28000,
-  size: 'regular',
-  topping: 'none',
-  sugar: 'normal',
-  ice: 'normal'
-};
+const PAYMENT_OPTIONS = ['e-wallet', 'cod', 'card'];
 
 const DEFAULT_PRODUCTS = [
   { id: 'berry', name: 'Berry Bliss', price: 24000, desc: 'Stroberi, blueberry, yogurt, dan aftertaste creamy.', category: 'smoothie', mood: 'happy', flavor: 'berry', stock: 15, rating: 4.8, sold: 240, createdAt: '2026-06-01', prep: 12, image: 'https://images.unsplash.com/photo-1553530666-ba11a7da3888?auto=format&fit=crop&w=900&q=80' },
@@ -73,7 +70,11 @@ const DEFAULT_PRODUCTS = [
   { id: 'espresso', name: 'Focus Coffee', price: 27000, desc: 'Espresso, susu dingin, dan caramel tipis untuk jam sibuk.', category: 'coffee', mood: 'focus', flavor: 'coffee', stock: 16, rating: 4.9, sold: 288, createdAt: '2026-06-18', prep: 7, image: 'https://images.unsplash.com/photo-1461023058943-07fcbe16d735?auto=format&fit=crop&w=900&q=80' },
   { id: 'blend', name: 'Choco Ice Blend', price: 32000, desc: 'Cokelat blender, susu, dan whipped cream lembut.', category: 'ice-blend', mood: 'happy', flavor: 'chocolate', stock: 10, rating: 4.7, sold: 142, createdAt: '2026-06-22', prep: 14, image: 'https://images.unsplash.com/photo-1572490122747-3968b75cc699?auto=format&fit=crop&w=900&q=80' },
   { id: 'toast', name: 'Cheese Toast Snack', price: 19000, desc: 'Snack gurih pendamping minuman segar.', category: 'snack', mood: 'relax', flavor: 'savory', stock: 25, rating: 4.5, sold: 98, createdAt: '2026-06-12', prep: 11, image: 'https://images.unsplash.com/photo-1528735602780-2552fd46c7af?auto=format&fit=crop&w=900&q=80' },
-  { id: 'green', name: 'Green Detox Juice', price: 29000, desc: 'Apel hijau, timun, lemon, dan bayam untuk mood sehat.', category: 'juice', mood: 'fresh', flavor: 'green', stock: 14, rating: 4.9, sold: 221, createdAt: '2026-06-24', prep: 10, image: 'https://images.unsplash.com/photo-1610970881699-44a5587cabec?auto=format&fit=crop&w=900&q=80' }
+  { id: 'green', name: 'Green Detox Juice', price: 29000, desc: 'Apel hijau, timun, lemon, dan bayam untuk mood sehat.', category: 'juice', mood: 'fresh', flavor: 'green', stock: 14, rating: 4.9, sold: 221, createdAt: '2026-06-24', prep: 10, image: 'https://images.unsplash.com/photo-1610970881699-44a5587cabec?auto=format&fit=crop&w=900&q=80' },
+  { id: 'blue-ocean', name: 'Blue Ocean Spark', price: 26000, desc: 'Mocktail soda biru dengan lemon segar dan sensasi sparkling.', category: 'ice-blend', mood: 'fresh', flavor: 'citrus', stock: 18, rating: 4.8, sold: 205, createdAt: '2026-07-09', prep: 8, image: 'assets/products/blue-ocean-spark.webp' },
+  { id: 'potato-wedges', name: 'Potato Wedges', price: 21000, desc: 'Kentang wedges gurih dengan taburan herbs dan saus cocol.', category: 'snack', mood: 'relax', flavor: 'savory', stock: 22, rating: 4.7, sold: 132, createdAt: '2026-07-09', prep: 12, image: 'assets/products/potato-wedges.webp' },
+  { id: 'cheese-fries', name: 'Cheese Fries', price: 23000, desc: 'French fries hangat dengan saus keju creamy dan bumbu tipis.', category: 'snack', mood: 'happy', flavor: 'savory', stock: 20, rating: 4.8, sold: 148, createdAt: '2026-07-09', prep: 10, image: 'assets/products/cheese-fries.webp' },
+  { id: 'honey-toast', name: 'Honey Toast', price: 24000, desc: 'Toast manis renyah dengan topping crumble dan es krim lembut.', category: 'snack', mood: 'happy', flavor: 'sweet', stock: 16, rating: 4.9, sold: 166, createdAt: '2026-07-09', prep: 13, image: 'assets/products/honey-toast.jpeg' }
 ];
 
 function readStore(key, fallback) {
@@ -107,11 +108,51 @@ function normalizeProduct(product, index) {
 
 function getProducts() {
   const stored = readStore('mood_products', null);
-  if (!stored || !Array.isArray(stored) || stored.length < DEFAULT_PRODUCTS.length) {
+  if (!stored || !Array.isArray(stored)) {
     writeStore('mood_products', DEFAULT_PRODUCTS);
     return DEFAULT_PRODUCTS.slice();
   }
-  return stored.map(normalizeProduct);
+  const merged = DEFAULT_PRODUCTS.reduce((products, defaultProduct) => {
+    return products.some((product) => product.id === defaultProduct.id) ? products : [...products, defaultProduct];
+  }, stored);
+  if (merged.length !== stored.length) writeStore('mood_products', merged);
+  return merged.map(normalizeProduct);
+}
+
+function saveProducts(products) {
+  writeStore('mood_products', products);
+}
+
+function getBestSellerProduct() {
+  return getProducts()
+    .filter((product) => product.stock > 0)
+    .sort((a, b) => (b.sold || 0) - (a.sold || 0))[0] || getProducts()[0];
+}
+
+function renderBestSeller() {
+  const product = getBestSellerProduct();
+  if (!product) return;
+  if (heroBestSellerImage) {
+    heroBestSellerImage.src = product.image;
+    heroBestSellerImage.alt = product.name;
+  }
+  if (heroBestSellerName) heroBestSellerName.textContent = product.name;
+  if (heroBestSellerDesc) heroBestSellerDesc.textContent = product.desc;
+  if (heroBestSellerPrice) heroBestSellerPrice.textContent = rupiah(product.price);
+  if (heroBestSellerSold) heroBestSellerSold.textContent = `${product.sold || 0}x dibeli • Rating ${product.rating}/5`;
+}
+
+function recordProductSales(items) {
+  if (!items.length) return;
+  const soldById = items.reduce((totals, item) => {
+    totals[item.id] = (totals[item.id] || 0) + (item.qty || 1);
+    return totals;
+  }, {});
+  const updatedProducts = getProducts().map((product) => ({
+    ...product,
+    sold: (product.sold || 0) + (soldById[product.id] || 0)
+  }));
+  saveProducts(updatedProducts);
 }
 
 function getCart() {
@@ -186,6 +227,10 @@ function getCartTotals() {
 
 function getSelectedCart() {
   return getCart().filter((item) => item.selected !== false);
+}
+
+function getValidPayment(value) {
+  return PAYMENT_OPTIONS.includes(value) ? value : 'e-wallet';
 }
 
 function addToCart(item) {
@@ -351,7 +396,7 @@ function fillCheckoutFromSavedDetails() {
   if (fields.address) fields.address.value = details.address;
   if (fields.fulfillment) fields.fulfillment.value = details.fulfillment;
   if (fields.distance) fields.distance.value = details.distance;
-  const selectedPayment = cartPaymentSelect?.value || details.payment;
+  const selectedPayment = getValidPayment(cartPaymentSelect?.value || details.payment);
   if (fields.payment) fields.payment.value = selectedPayment;
   if (cartPaymentSelect) cartPaymentSelect.value = selectedPayment;
   updatePaymentFields();
@@ -401,12 +446,6 @@ function openCheckout() {
   }
   if (!getSelectedCart().length) {
     if (notificationMessage) notificationMessage.textContent = 'Pilih minimal 1 item di keranjang sebelum checkout.';
-    return;
-  }
-  if (!isLoggedIn()) {
-    if (notificationMessage) {
-      notificationMessage.innerHTML = 'Silakan login di halaman akun pelanggan sebelum checkout. <a href="akun.html">Login pelanggan</a>';
-    }
     return;
   }
   fillCheckoutFromSavedDetails();
@@ -500,6 +539,7 @@ function saveTransaction(formData) {
     taste: savedProfile.taste || 'fresh'
   });
   writeStore(getUserStoreKey('mood_checkout_contact'), savedContact);
+  recordProductSales(cart);
   writeStore('mood_transactions', [...getTransactions(), transaction]);
   return transaction;
 }
@@ -515,6 +555,7 @@ function renderProfile() {
 }
 
 function refresh() {
+  renderBestSeller();
   renderProducts();
   renderDrinkOptions();
   updateSummary();
@@ -534,7 +575,8 @@ if (year) year.textContent = new Date().getFullYear();
 [fulfillmentSelect, distanceSelect].forEach((element) => element?.addEventListener('change', renderCart));
 paymentSelect?.addEventListener('change', updatePaymentFields);
 cartPaymentSelect?.addEventListener('change', () => {
-  if (paymentSelect) paymentSelect.value = cartPaymentSelect.value;
+  if (paymentSelect) paymentSelect.value = getValidPayment(cartPaymentSelect.value);
+  cartPaymentSelect.value = getValidPayment(cartPaymentSelect.value);
   updatePaymentFields();
 });
 checkoutForm?.elements?.address?.addEventListener('change', (event) => {
@@ -580,8 +622,10 @@ addOrderButton?.addEventListener('click', () => {
 });
 
 heroBestSellerButton?.addEventListener('click', () => {
-  addToCart(HERO_BEST_SELLER);
-  if (notificationMessage) notificationMessage.textContent = 'Mango Chill Smoothie masuk keranjang.';
+  const bestSeller = getBestSellerProduct();
+  if (!bestSeller) return;
+  addToCart(getConfiguredProduct(bestSeller, 'quick'));
+  if (notificationMessage) notificationMessage.textContent = `${bestSeller.name} masuk keranjang.`;
   openCheckout();
 });
 
@@ -608,12 +652,6 @@ productModal?.addEventListener('click', (event) => {
 
 checkoutForm?.addEventListener('submit', (event) => {
   event.preventDefault();
-  if (!isLoggedIn()) {
-    alert('Silakan login dulu sebelum membeli.');
-    closeCheckout();
-    window.location.href = 'akun.html';
-    return;
-  }
   if (!getSelectedCart().length) {
     alert('Pilih minimal 1 item untuk checkout.');
     return;
@@ -629,7 +667,7 @@ checkoutForm?.addEventListener('submit', (event) => {
   closeCheckout();
   checkoutForm.reset();
   if (notificationMessage) notificationMessage.textContent = `Pesanan ${transaction.id} diterima. Status: baru.`;
-  alert('Pesanan berhasil dikonfirmasi. Notifikasi status tersimpan di riwayat akun.');
+  alert('Pesanan berhasil dikonfirmasi.');
 });
 
 subscribeForm?.addEventListener('submit', (event) => {

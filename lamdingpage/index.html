@@ -8,13 +8,14 @@
       name="description"
       content="MoodDrink adalah toko online minuman segar dengan desain warna ceria, menu variatif, dan pemesanan praktis."
     />
-    <link rel="stylesheet" href="styles.css" />
+    <link rel="icon" type="image/svg+xml" href="mooddrink-icon.svg?v=2" />
+    <link rel="stylesheet" href="styles.css?v=2" />
   </head>
   <body>
     <header class="topbar">
       <a class="brand" href="#home">
         <span class="brand-mark" aria-label="MoodDrink logo">
-          <span class="brand-mark-cup"></span>
+          <img src="mooddrink-icon.svg?v=2" alt="" />
         </span>
         <span>MoodDrink</span>
       </a>
@@ -51,14 +52,15 @@
           </ul>
         </div>
         <div class="hero-card">
-          <img class="hero-product-image" src="https://images.unsplash.com/photo-1622597467836-f3285f2131b8?auto=format&fit=crop&w=700&q=80" alt="Mango smoothie segar" />
+          <img class="hero-product-image" id="hero-best-seller-image" src="https://images.unsplash.com/photo-1622597467836-f3285f2131b8?auto=format&fit=crop&w=700&q=80" alt="Mango smoothie segar" />
           <div class="drink-bubble bubble-large"></div>
           <div class="drink-bubble bubble-small"></div>
           <div class="hero-card-inner">
             <p class="eyebrow">Best Seller Hari Ini</p>
-            <h3>Mango Chill Smoothie</h3>
-            <p>Rasa mangga segar + yogurt lembut</p>
-            <strong>Rp 28.000</strong>
+            <h3 id="hero-best-seller-name">Mango Chill Smoothie</h3>
+            <p id="hero-best-seller-desc">Rasa mangga segar + yogurt lembut</p>
+            <strong id="hero-best-seller-price">Rp 28.000</strong>
+            <p class="mini-note" id="hero-best-seller-sold">Terjual terbanyak hari ini</p>
             <button class="btn btn-primary hero-order-btn" id="hero-best-seller-btn" type="button">Checkout</button>
           </div>
         </div>
@@ -450,13 +452,13 @@
             </select>
           </label>
         </div>
-        <div style="display:flex;gap:10px;margin-top:12px;">
+        <div class="modal-actions">
           <button class="btn btn-primary modal-add-btn" id="product-modal-add">Tambah ke keranjang</button>
           <button class="btn btn-secondary" id="product-modal-close-2">Tutup</button>
         </div>
       </div>
     </div>
 
-    <script src="script.js"></script>
+    <script src="script.js?v=3"></script>
   </body>
 </html>

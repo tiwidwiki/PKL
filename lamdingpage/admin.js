@@ -25,7 +25,11 @@
     { id: 'berry', name: 'Berry Bliss', price: 24000, desc: 'Stroberi, blueberry, yogurt, dan aftertaste creamy.', category: 'smoothie', mood: 'happy', flavor: 'berry', stock: 15, rating: 4.8, sold: 240, createdAt: '2026-06-01', prep: 12, image: 'https://images.unsplash.com/photo-1553530666-ba11a7da3888?auto=format&fit=crop&w=900&q=80' },
     { id: 'lemon', name: 'Lemon Spark', price: 18000, desc: 'Lemon dingin, daun mint, dan soda ringan.', category: 'juice', mood: 'fresh', flavor: 'citrus', stock: 20, rating: 4.7, sold: 310, createdAt: '2026-06-10', prep: 8, image: 'https://images.unsplash.com/photo-1621263764928-df1444c5e859?auto=format&fit=crop&w=900&q=80' },
     { id: 'coral', name: 'Coral Sunrise', price: 20000, desc: 'Jeruk, nanas, dan madu dengan warna coral cerah.', category: 'juice', mood: 'happy', flavor: 'tropical', stock: 12, rating: 4.6, sold: 196, createdAt: '2026-05-21', prep: 10, image: 'https://images.unsplash.com/photo-1600271886742-f049cd451bba?auto=format&fit=crop&w=900&q=80' },
-    { id: 'mint', name: 'Mint Chill Tea', price: 22000, desc: 'Tea latte dingin dengan aroma mint yang ringan.', category: 'tea', mood: 'relax', flavor: 'mint', stock: 18, rating: 4.8, sold: 170, createdAt: '2026-06-16', prep: 9, image: 'https://images.unsplash.com/photo-1556679343-c7306c1976bc?auto=format&fit=crop&w=900&q=80' }
+    { id: 'mint', name: 'Mint Chill Tea', price: 22000, desc: 'Tea latte dingin dengan aroma mint yang ringan.', category: 'tea', mood: 'relax', flavor: 'mint', stock: 18, rating: 4.8, sold: 170, createdAt: '2026-06-16', prep: 9, image: 'https://images.unsplash.com/photo-1556679343-c7306c1976bc?auto=format&fit=crop&w=900&q=80' },
+    { id: 'blue-ocean', name: 'Blue Ocean Spark', price: 26000, desc: 'Mocktail soda biru dengan lemon segar dan sensasi sparkling.', category: 'ice-blend', mood: 'fresh', flavor: 'citrus', stock: 18, rating: 4.8, sold: 205, createdAt: '2026-07-09', prep: 8, image: 'assets/products/blue-ocean-spark.webp' },
+    { id: 'potato-wedges', name: 'Potato Wedges', price: 21000, desc: 'Kentang wedges gurih dengan taburan herbs dan saus cocol.', category: 'snack', mood: 'relax', flavor: 'savory', stock: 22, rating: 4.7, sold: 132, createdAt: '2026-07-09', prep: 12, image: 'assets/products/potato-wedges.webp' },
+    { id: 'cheese-fries', name: 'Cheese Fries', price: 23000, desc: 'French fries hangat dengan saus keju creamy dan bumbu tipis.', category: 'snack', mood: 'happy', flavor: 'savory', stock: 20, rating: 4.8, sold: 148, createdAt: '2026-07-09', prep: 10, image: 'assets/products/cheese-fries.webp' },
+    { id: 'honey-toast', name: 'Honey Toast', price: 24000, desc: 'Toast manis renyah dengan topping crumble dan es krim lembut.', category: 'snack', mood: 'happy', flavor: 'sweet', stock: 16, rating: 4.9, sold: 166, createdAt: '2026-07-09', prep: 13, image: 'assets/products/honey-toast.jpeg' }
   ];
 
   function readStore(key, fallback) {
@@ -44,11 +48,15 @@
 
   function getProducts() {
     const products = readStore('mood_products', null);
-    if (!Array.isArray(products) || products.length === 0) {
+    if (!Array.isArray(products)) {
       writeStore('mood_products', DEFAULT_PRODUCTS);
       return DEFAULT_PRODUCTS.slice();
     }
-    return products.map((product, index) => ({ rating: 4.7, sold: 0, prep: 10, createdAt: '2026-06-01', image: DEFAULT_PRODUCTS[index % DEFAULT_PRODUCTS.length].image, mood: 'fresh', ...product }));
+    const merged = DEFAULT_PRODUCTS.reduce((items, defaultProduct) => {
+      return items.some((product) => product.id === defaultProduct.id) ? items : [...items, defaultProduct];
+    }, products);
+    if (merged.length !== products.length) writeStore('mood_products', merged);
+    return merged.map((product, index) => ({ rating: 4.7, sold: 0, prep: 10, createdAt: '2026-06-01', image: DEFAULT_PRODUCTS[index % DEFAULT_PRODUCTS.length].image, mood: 'fresh', ...product }));
   }
 
   function saveProducts(products) {
