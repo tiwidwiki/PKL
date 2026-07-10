@@ -63,19 +63,29 @@ let selectedProductId = '';
 const PAYMENT_OPTIONS = ['e-wallet', 'cod', 'card'];
 
 const DEFAULT_PRODUCTS = [
-  { id: 'berry', name: 'Berry Bliss', price: 24000, desc: 'Stroberi, blueberry, yogurt, dan aftertaste creamy.', category: 'smoothie', mood: 'happy', flavor: 'berry', stock: 15, rating: 4.8, sold: 240, createdAt: '2026-06-01', prep: 12, image: 'https://images.unsplash.com/photo-1553530666-ba11a7da3888?auto=format&fit=crop&w=900&q=80' },
+  { id: 'berry', name: 'Berry Bliss', price: 24000, desc: 'Stroberi, blueberry, yogurt, dan aftertaste creamy.', category: 'smoothie', mood: 'happy', flavor: 'berry', stock: 15, rating: 4.8, sold: 240, createdAt: '2026-06-01', prep: 12, image: 'assets/products/berry-smoothie.webp' },
   { id: 'lemon', name: 'Lemon Spark', price: 18000, desc: 'Lemon dingin, daun mint, dan soda ringan.', category: 'juice', mood: 'fresh', flavor: 'citrus', stock: 20, rating: 4.7, sold: 310, createdAt: '2026-06-10', prep: 8, image: 'https://images.unsplash.com/photo-1621263764928-df1444c5e859?auto=format&fit=crop&w=900&q=80' },
   { id: 'coral', name: 'Coral Sunrise', price: 20000, desc: 'Jeruk, nanas, dan madu dengan warna coral cerah.', category: 'juice', mood: 'happy', flavor: 'tropical', stock: 12, rating: 4.6, sold: 196, createdAt: '2026-05-21', prep: 10, image: 'https://images.unsplash.com/photo-1600271886742-f049cd451bba?auto=format&fit=crop&w=900&q=80' },
   { id: 'mint', name: 'Mint Chill Tea', price: 22000, desc: 'Tea latte dingin dengan aroma mint yang ringan.', category: 'tea', mood: 'relax', flavor: 'mint', stock: 18, rating: 4.8, sold: 170, createdAt: '2026-06-16', prep: 9, image: 'https://images.unsplash.com/photo-1556679343-c7306c1976bc?auto=format&fit=crop&w=900&q=80' },
-  { id: 'espresso', name: 'Focus Coffee', price: 27000, desc: 'Espresso, susu dingin, dan caramel tipis untuk jam sibuk.', category: 'coffee', mood: 'focus', flavor: 'coffee', stock: 16, rating: 4.9, sold: 288, createdAt: '2026-06-18', prep: 7, image: 'https://images.unsplash.com/photo-1461023058943-07fcbe16d735?auto=format&fit=crop&w=900&q=80' },
-  { id: 'blend', name: 'Choco Ice Blend', price: 32000, desc: 'Cokelat blender, susu, dan whipped cream lembut.', category: 'ice-blend', mood: 'happy', flavor: 'chocolate', stock: 10, rating: 4.7, sold: 142, createdAt: '2026-06-22', prep: 14, image: 'https://images.unsplash.com/photo-1572490122747-3968b75cc699?auto=format&fit=crop&w=900&q=80' },
+  { id: 'espresso', name: 'Focus Coffee', price: 27000, desc: 'Espresso, susu dingin, dan caramel tipis untuk jam sibuk.', category: 'coffee', mood: 'focus', flavor: 'coffee', stock: 16, rating: 4.9, sold: 288, createdAt: '2026-06-18', prep: 7, image: 'assets/products/iced-coffee.jpeg' },
+  { id: 'blend', name: 'Choco Ice Blend', price: 32000, desc: 'Cokelat blender, susu, dan whipped cream lembut.', category: 'ice-blend', mood: 'happy', flavor: 'chocolate', stock: 10, rating: 4.7, sold: 142, createdAt: '2026-06-22', prep: 14, image: 'assets/products/es-blend-choco.jpeg' },
   { id: 'toast', name: 'Cheese Toast Snack', price: 19000, desc: 'Snack gurih pendamping minuman segar.', category: 'snack', mood: 'relax', flavor: 'savory', stock: 25, rating: 4.5, sold: 98, createdAt: '2026-06-12', prep: 11, image: 'https://images.unsplash.com/photo-1528735602780-2552fd46c7af?auto=format&fit=crop&w=900&q=80' },
   { id: 'green', name: 'Green Detox Juice', price: 29000, desc: 'Apel hijau, timun, lemon, dan bayam untuk mood sehat.', category: 'juice', mood: 'fresh', flavor: 'green', stock: 14, rating: 4.9, sold: 221, createdAt: '2026-06-24', prep: 10, image: 'https://images.unsplash.com/photo-1610970881699-44a5587cabec?auto=format&fit=crop&w=900&q=80' },
   { id: 'blue-ocean', name: 'Blue Ocean Spark', price: 26000, desc: 'Mocktail soda biru dengan lemon segar dan sensasi sparkling.', category: 'ice-blend', mood: 'fresh', flavor: 'citrus', stock: 18, rating: 4.8, sold: 205, createdAt: '2026-07-09', prep: 8, image: 'assets/products/blue-ocean-spark.webp' },
+  { id: 'mango-smoothie', name: 'Mango Chill Smoothie', price: 28000, desc: 'Mangga segar, yogurt lembut, dan madu ringan.', category: 'smoothie', mood: 'happy', flavor: 'mango', stock: 18, rating: 4.9, sold: 340, createdAt: '2026-07-10', prep: 10, image: 'assets/products/mango-smoothie.jpeg' },
+  { id: 'kiwi-smoothie', name: 'Kiwi Fresh Smoothie', price: 30000, desc: 'Kiwi asam manis, yogurt, dan sensasi creamy segar.', category: 'smoothie', mood: 'fresh', flavor: 'kiwi', stock: 14, rating: 4.8, sold: 188, createdAt: '2026-07-10', prep: 11, image: 'assets/products/kiwi-smoothie.webp' },
+  { id: 'vanilla-ice-blend', name: 'Vanilla Ice Blend', price: 31000, desc: 'Ice blend vanilla lembut dengan topping creamy.', category: 'ice-blend', mood: 'relax', flavor: 'vanilla', stock: 13, rating: 4.7, sold: 156, createdAt: '2026-07-10', prep: 12, image: 'assets/products/es-blend-vanilla.jpeg' },
+  { id: 'caramel-coffee', name: 'Caramel Coffee', price: 29000, desc: 'Kopi susu dingin dengan caramel manis tipis.', category: 'coffee', mood: 'focus', flavor: 'coffee', stock: 15, rating: 4.8, sold: 214, createdAt: '2026-07-10', prep: 8, image: 'assets/products/caramel-coffee.jpeg' },
+  { id: 'americano', name: 'Iced Americano', price: 23000, desc: 'Americano dingin yang ringan, clean, dan menyegarkan.', category: 'coffee', mood: 'focus', flavor: 'coffee', stock: 17, rating: 4.7, sold: 176, createdAt: '2026-07-10', prep: 6, image: 'assets/products/americano.jpeg' },
   { id: 'potato-wedges', name: 'Potato Wedges', price: 21000, desc: 'Kentang wedges gurih dengan taburan herbs dan saus cocol.', category: 'snack', mood: 'relax', flavor: 'savory', stock: 22, rating: 4.7, sold: 132, createdAt: '2026-07-09', prep: 12, image: 'assets/products/potato-wedges.webp' },
   { id: 'cheese-fries', name: 'Cheese Fries', price: 23000, desc: 'French fries hangat dengan saus keju creamy dan bumbu tipis.', category: 'snack', mood: 'happy', flavor: 'savory', stock: 20, rating: 4.8, sold: 148, createdAt: '2026-07-09', prep: 10, image: 'assets/products/cheese-fries.webp' },
   { id: 'honey-toast', name: 'Honey Toast', price: 24000, desc: 'Toast manis renyah dengan topping crumble dan es krim lembut.', category: 'snack', mood: 'happy', flavor: 'sweet', stock: 16, rating: 4.9, sold: 166, createdAt: '2026-07-09', prep: 13, image: 'assets/products/honey-toast.jpeg' }
 ];
+
+const DEFAULT_PRODUCT_BY_ID = DEFAULT_PRODUCTS.reduce((products, product) => {
+  products[product.id] = product;
+  return products;
+}, {});
 
 function readStore(key, fallback) {
   try {
@@ -93,6 +103,8 @@ function writeStore(key, value) {
 
 function normalizeProduct(product, index) {
   const fallback = DEFAULT_PRODUCTS[index % DEFAULT_PRODUCTS.length];
+  const defaultProduct = DEFAULT_PRODUCT_BY_ID[product.id];
+  const hasOldDefaultRemoteImage = typeof product.image === 'string' && product.image.includes('images.unsplash.com');
   return {
     rating: fallback.rating,
     sold: fallback.sold,
@@ -102,7 +114,8 @@ function normalizeProduct(product, index) {
     prep: fallback.prep,
     image: fallback.image,
     stock: 10,
-    ...product
+    ...product,
+    image: defaultProduct && hasOldDefaultRemoteImage ? defaultProduct.image : (product.image || fallback.image)
   };
 }
 
@@ -115,8 +128,10 @@ function getProducts() {
   const merged = DEFAULT_PRODUCTS.reduce((products, defaultProduct) => {
     return products.some((product) => product.id === defaultProduct.id) ? products : [...products, defaultProduct];
   }, stored);
-  if (merged.length !== stored.length) writeStore('mood_products', merged);
-  return merged.map(normalizeProduct);
+  const normalized = merged.map(normalizeProduct);
+  const hasUpdatedDefaults = normalized.some((product, index) => product.image !== merged[index]?.image);
+  if (merged.length !== stored.length || hasUpdatedDefaults) writeStore('mood_products', normalized);
+  return normalized;
 }
 
 function saveProducts(products) {
